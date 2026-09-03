@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Reading App da Bia</title>
+    <title>Rastreador de Leitura da Bia</title>
     <style>
         * {
             margin: 0;
@@ -12,10 +12,11 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #333;
         }
         
         .container {
@@ -27,77 +28,155 @@
             text-align: center;
             color: white;
             margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
         }
         
         h1 {
-            font-size: 2.5em;
+            font-size: 3em;
             margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
         }
         
         .add-book-section {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.6s ease-out 0.2s backwards;
+        }
+        
+        .add-book-section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group.full {
+            grid-column: 1 / -1;
         }
         
         label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.95em;
         }
         
         input, textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
         }
         
         button {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 30px;
+            padding: 14px 40px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1em;
             font-weight: 600;
+            transition: all 0.3s ease;
+            grid-column: 1 / -1;
         }
         
         button:hover {
-            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
         }
         
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            animation: fadeIn 0.6s ease-out 0.4s backwards;
         }
         
         .book-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .book-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
         
         .book-card h3 {
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .book-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
         }
         
         .book-card p {
             color: #666;
-            font-size: 0.9em;
-            margin-bottom: 8px;
+            font-size: 0.95em;
+            margin: 0;
         }
         
         .book-card .author {
@@ -105,47 +184,282 @@
             font-weight: 600;
         }
         
+        .book-card .year {
+            color: #999;
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .book-card .notes {
+            color: #777;
+            font-size: 0.9em;
+            font-style: italic;
+            background: #f8f8f8;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        
+        .book-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn-delete:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        
         .empty-state {
             text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 60px 20px;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state p {
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            animation: fadeIn 0.6s ease-out 0.1s backwards;
+        }
+        
+        .stat-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
             color: white;
-            padding: 40px;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .add-book-section {
+                padding: 25px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📚 Reading Tracker da Bia</h1>
-            <p>Keep track of all the books you've read</p>
+            <h1>📚 Rastreador de Leitura</h1>
+            <p class="subtitle">Acompanhe e celebre todos os livros que você leu</p>
         </header>
         
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="totalBooks">0</div>
+                <div class="stat-label">Livros Lidos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="thisYear">0</div>
+                <div class="stat-label">Este Ano</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="completion">0%</div>
+                <div class="stat-label">Progresso</div>
+            </div>
+        </div>
+        
         <div class="add-book-section">
-            <h2>Add a Book You've Read</h2>
+            <h2>📖 Adicione um Livro</h2>
             <form id="bookForm">
-                <div class="form-group">
-                    <label for="title">Book Title</label>
-                    <input type="text" id="title" placeholder="Enter book title" required>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="title">Título do Livro</label>
+                        <input type="text" id="title" placeholder="Digite o título..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Autor</label>
+                        <input type="text" id="author" placeholder="Digite o nome do autor..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Ano Completado</label>
+                        <input type="number" id="year" placeholder="2024" min="1900" max="2099" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="rating">Avaliação (1-5)</label>
+                        <input type="number" id="rating" placeholder="1-5" min="1" max="5">
+                    </div>
+                    <div class="form-group full">
+                        <label for="notes">Anotações</label>
+                        <textarea id="notes" placeholder="Compartilhe seus pensamentos sobre o livro..."></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="author">Author</label>
-                    <input type="text" id="author" placeholder="Enter author name" required>
-                </div>
-                <div class="form-group">
-                    <label for="year">Year Completed</label>
-                    <input type="number" id="year" placeholder="2024" min="1900" max="2099">
-                </div>
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea id="notes" placeholder="Add your thoughts about the book..." rows="3"></textarea>
-                </div>
-                <button type="submit">Add Book</button>
+                <button type="submit">✨ Adicionar Livro</button>
             </form>
         </div>
         
         <div id="booksContainer" class="books-grid"></div>
         <div id="emptyState" class="empty-state">
-            <p>No books added yet. Start adding your completed reads!</p>
+            <div class="empty-state-icon">📚</div>
+            <p>Nenhum livro adicionado ainda. Comece a construir sua biblioteca!</p>
         </div>
     </div>
+
+    <script>
+        const bookForm = document.getElementById('bookForm');
+        const booksContainer = document.getElementById('booksContainer');
+        const emptyState = document.getElementById('emptyState');
+        const totalBooksEl = document.getElementById('totalBooks');
+        const thisYearEl = document.getElementById('thisYear');
+        const completionEl = document.getElementById('completion');
+        
+        let books = JSON.parse(localStorage.getItem('books')) || [];
+        
+        // Função para salvar livros no localStorage
+        function saveBooks() {
+            localStorage.setItem('books', JSON.stringify(books));
+            updateStats();
+        }
+        
+        // Função para adicionar livro
+        function addBook(e) {
+            e.preventDefault();
+            
+            const book = {
+                id: Date.now(),
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                year: document.getElementById('year').value || new Date().getFullYear(),
+                rating: document.getElementById('rating').value || 0,
+                notes: document.getElementById('notes').value,
+                dateAdded: new Date().toLocaleDateString('pt-BR')
+            };
+            
+            books.push(book);
+            saveBooks();
+            displayBooks();
+            bookForm.reset();
+        }
+        
+        // Função para deletar livro
+        function deleteBook(id) {
+            if (confirm('Tem certeza que deseja remover este livro?')) {
+                books = books.filter(book => book.id !== id);
+                saveBooks();
+                displayBooks();
+            }
+        }
+        
+        // Função para exibir livros
+        function displayBooks() {
+            if (books.length === 0) {
+                booksContainer.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            booksContainer.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            booksContainer.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <h3>${book.title}</h3>
+                    <div class="book-info">
+                        <p class="author">por ${book.author}</p>
+                        <p class="year">✓ Completado em ${book.year}</p>
+                        ${book.rating ? `<p>⭐ Avaliação: ${book.rating}/5</p>` : ''}
+                    </div>
+                    ${book.notes ? `<div class="notes">"${book.notes}"</div>` : ''}
+                    <div class="book-actions">
+                        <button class="btn-delete" onclick="deleteBook(${book.id})">Remover</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Função para atualizar estatísticas
+        function updateStats() {
+            totalBooksEl.textContent = books.length;
+            
+            const currentYear = new Date().getFullYear();
+            const thisYearBooks = books.filter(b => parseInt(b.year) === currentYear).length;
+            thisYearEl.textContent = thisYearBooks;
+            
+            const avgRating = books.length > 0 
+                ? Math.round((books.reduce((sum, b) => sum + (parseInt(b.rating) || 0), 0) / books.length) * 10)
+                : 0;
+            completionEl.textContent = avgRating + '%';
+        }
+        
+        // Event listeners
+        bookForm.addEventListener('submit', addBook);
+        
+        // Inicializar
+        displayBooks();
+        updateStats();
+    </script>
 </body>
 </html>
